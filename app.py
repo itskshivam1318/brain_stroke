@@ -93,8 +93,7 @@ def uploader():
 def about():
     return render_template("about.html")
 
-@app.route('/output')
-def output():
+def out():
     with open('model_pickle', 'rb') as f:
         mp = pickle.load(f)
     enc = OneHotEncoder()
@@ -109,9 +108,13 @@ def output():
     x = x.reshape(1, 128, 128, 3)
     answ = mp.predict_on_batch(x)
     classification = np.where(answ == np.amax(answ))[1][0]
-    imshow(img)
+    #imshow(img)
     return str(answ[0][classification] * 100) + '% Confidence This Is ' + names(classification)
 
+
+@app.route('/output')
+def output():
+    return render_template('output.html', myfunction = out)
 
 if __name__ == '__main__':
     app.run(debug=True)
