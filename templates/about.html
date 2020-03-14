@@ -1,0 +1,9 @@
+<!--<form action="{{url_for('Insert')}}" method="POST">-->
+
+    if request.method == "GET":
+        cur = mysql.connection.cursor()
+        cur.execute("select password from users where email = ?", (email))
+        for row in cur:
+            print(row)
+        if cur == password:
+            redirect(url_for("home"))

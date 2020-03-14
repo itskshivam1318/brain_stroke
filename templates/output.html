@@ -1,0 +1,29 @@
+<html>
+<head>
+    <title>Stroke detection</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark">
+    <span class="navbar-brand mx-auto h1">STROKE PREDICTION</span>
+</nav>
+<br>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-danger" role="alert" >
+    {{message}}
+    <br>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<br>
+<div>
+    <h1>{{str(answ[0][classification] * 100) + '% Confidence This Is ' + names(classification)}}</h1>>
+</div>
+
+
+</body>
+</html>
