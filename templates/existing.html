@@ -1,0 +1,65 @@
+<html>
+<head>
+    <title>stroke detection</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark">
+    <span class="navbar-brand mx-auto h1">STROKE PREDICTION</span>
+</nav>
+ <div class="cover-container d-flex p-3 mx-auto flex-column">
+        <header class="masthead mb-0.5">
+            <div class="inner">
+                <nav class="nav nav-masthead justify-content-center">
+                    <a class="nav-link active" href="/home">Add case</a>
+                    <a class="nav-link" href="/existing">Existing cases</a>
+                </nav>
+            </div>
+        </header>
+     </div>
+<br>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-success" role="alert" >
+    {{message}}
+    <br>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+<br>
+<div class="container border border-dark mx-auto mb-2" style="width: 1200px  ">
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope = "col">First Name</th>
+                <th scope = "col">Last Name</th>
+                <th scope = "col">Email id</th>
+                <th scope = "col">Age</th>
+                <th scope = "col">Gender</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for row in case %}
+        <tr>
+            <td>{{row.1}}</td>
+            <td>{{row.2}}</td>
+            <td>{{row.3}}</td>
+            <td>{{row.4}}</td>
+            <td>{{row.5}}</td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+</div>
+
+<br>
+<footer class="text-light bg-dark">
+            <p>&copy; Created By <a href="https://github.com/itskshivam1318/" target="_blank">Rupal Sonawane</a></p>
+        </footer>
+</body>
+</html>

@@ -11,6 +11,14 @@ import matplotlib.pyplot as plt
 from os import path
 import shutil
 from werkzeug.utils import secure_filename
+import numpy as np
+from tqdm import tqdm
+import cv2
+import os
+import shutil
+import itertools
+import imutils
+import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 
@@ -76,18 +84,44 @@ def registration():
 def home():
     return render_template("home.html")
 
+@app.route('/existing')
+def existing():
+    cur =mysql.connection.cursor()
+    cur.execute("SELECT * FROM cases")
+    data = cur.fetchall()
+    cur.close()
+    return render_template("existing.html", case = data)
+
 @app.route('/uploader', methods = ['GET', 'POST'])
 def uploader():
     if request.method == 'POST':
         file = request.files['file']
         file.save(secure_filename(file.filename))
         print(file.filename)
+        source = file.filename
+        dest = "/uploads"
+        #shutil.move(source, dest)
         if path.exists("input.jpg"):
             os.remove("input.jpg")
         os.rename(file.filename, r'input.jpg')
-        #shutil.move(file.filename,'/uploads')
         flash("File uploaded successfully")
-    return redirect(url_for('output'))
+    return redirect(url_for('home'))
+
+@app.route('/cases', methods = ['POST'])
+def cases():
+    if request.method == 'POST':
+        flash("case registered Successfully.")
+        fname = request.form['first_name']
+        lname = request.form['last_name']
+        email = request.form['email_id']
+        age = request.form['age']
+        gender = request.form['gender']
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO cases(fname,lname,email,age,gender) VALUES (%s,%s,%s,%s,%s)",
+                    (fname, lname, email, age, gender))
+        mysql.connection.commit()
+        return redirect(url_for('output'))
+
 
 @app.route('/about')
 def about():
@@ -111,10 +145,68 @@ def out():
     #imshow(img)
     return str(answ[0][classification] * 100) + '% Confidence This Is ' + names(classification)
 
+def images():
+    IMG_SIZE = (224, 224)
+    img = cv2.imread('input.jpg')
+    img = cv2.resize(img,dsize=IMG_SIZE,interpolation=cv2.INTER_CUBIC)
+    gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    gray = cv2.GaussianBlur(gray, (5, 5), 0)
+    thresh = cv2.threshold(gray, 45, 255, cv2.THRESH_BINARY)[1]
+    thresh = cv2.erode(thresh, None, iterations=2)
+    thresh = cv2.dilate(thresh, None, iterations=2)
+    cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cnts = imutils.grab_contours(cnts)
+    c = max(cnts, key=cv2.contourArea)
+    extLeft = tuple(c[c[:, :, 0].argmin()][0])
+    extRight = tuple(c[c[:, :, 0].argmax()][0])
+    extTop = tuple(c[c[:, :, 1].argmin()][0])
+    extBot = tuple(c[c[:, :, 1].argmax()][0])
+    img_cnt = cv2.drawContours(img.copy(), [c], -1, (0, 255, 255), 4)
+    img_pnt = cv2.circle(img_cnt.copy(), extLeft, 8, (0, 0, 255), -1)
+    img_pnt = cv2.circle(img_pnt, extRight, 8, (0, 255, 0), -1)
+    img_pnt = cv2.circle(img_pnt, extTop, 8, (255, 0, 0), -1)
+    img_pnt = cv2.circle(img_pnt, extBot, 8, (255, 255, 0), -1)
+    ADD_PIXELS = 0
+    new_img = img[extTop[1] - ADD_PIXELS:extBot[1] + ADD_PIXELS,
+              extLeft[0] - ADD_PIXELS:extRight[0] + ADD_PIXELS].copy()
+    plt.imshow(img)
+    plt.xticks([])
+    plt.yticks([])
+    plt.title('Original image')
+    plt.savefig('original.jpg')
+    if path.exists("static/original.jpg"):
+        os.remove("static/original.jpg")
+    shutil.move('original.jpg', 'static/')
+    plt.imshow(img_cnt)
+    plt.xticks([])
+    plt.yticks([])
+    plt.title('Biggest contour')
+    plt.savefig('contour.jpg')
+    if path.exists("static/contour.jpg"):
+        os.remove("static/contour.jpg")
+    shutil.move('contour.jpg', 'static/')
+    plt.imshow(img_pnt)
+    plt.xticks([])
+    plt.yticks([])
+    plt.title('Extreme points')
+    plt.savefig('points.jpg')
+    if path.exists("static/points.jpg"):
+        os.remove("static/points.jpg")
+    shutil.move('points.jpg', 'static/')
+    plt.imshow(new_img)
+    plt.xticks([])
+    plt.yticks([])
+    plt.title('Brain image')
+    plt.savefig('brain.jpg')
+    if path.exists("static/brain.jpg"):
+        os.remove("static/brain.jpg")
+    shutil.move('brain.jpg', 'static/')
+
 
 @app.route('/output')
 def output():
-    return render_template('output.html', myfunction = out)
+    images()
+    return render_template('output.html', myfunction = out, original = 'original.png')
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -9,6 +9,16 @@
 <nav class="navbar navbar-dark bg-dark">
     <span class="navbar-brand mx-auto h1">STROKE PREDICTION</span>
 </nav>
+ <div class="cover-container d-flex p-3 mx-auto flex-column">
+        <header class="masthead mb-0.5">
+            <div class="inner">
+                <nav class="nav nav-masthead justify-content-center">
+                    <a class="nav-link active" href="/home">Add case</a>
+                    <a class="nav-link" href="/existing">Existing cases</a>
+                </nav>
+            </div>
+        </header>
+     </div>
 <br>
 {% with messages = get_flashed_messages() %}
 {% if messages %}
@@ -21,9 +31,57 @@
 {% endif %}
 {% endwith %}
 <br>
-<form action = "{{url_for('uploader')}}" method = "POST" enctype=multipart/form-data>
-    <input type = "file" name = "file" />
-    <input type="submit">
-</form>
+    <div class="container border border-dark mx-auto mb-2" style="width: 1200px  ">
+    <form action="{{url_for('cases')}}" method="POST">
+        <h1 class="h3 mb-3 font-weight-normal">Add cases</h1>
+        <div class="form-group">
+            <label>First Name</label>
+            <input type="Text" class="form-control" name="first_name">
+        </div>
+
+        <div class="form-group">
+            <label>Last Name</label>
+            <input type="Text" class="form-control" name="last_name">
+        </div>
+
+        <div class="form-group">
+            <label>Email address</label>
+            <input type="email" class="form-control" name="email_id">
+        </div>
+        <div class="form-group">
+            <label>Age</label>
+            <input type="Text" class="form-control" name="age">
+        </div>
+        <div class="form-group">
+            <label>Gender</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="gender" value="male" onclick="onlyOne(this)">
+                <label class="form-check-label">
+                    Male
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="gender" value="female" onclick="onlyOne(this)">
+                <label class="form-check-label">
+                    Female
+                </label>
+            </div>
+        </div>
+        <label class="form-check-label">
+                    Brain image
+        </label>
+        <br>
+        <form action = "{{url_for('uploader')}}" method = "POST" enctype=multipart/form-data>
+            <input type = "file" name = "file" />
+            <input class="btn btn-primary"  type="submit">
+        </form>
+        <br>
+    </form>
+</div>
+<br>
+
+<footer class="text-light bg-dark">
+            <p>&copy; Created By <a href="https://github.com/itskshivam1318/" target="_blank">Rupal Sonawane</a></p>
+        </footer>
 </body>
 </html>
