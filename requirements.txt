@@ -10,7 +10,7 @@ backcall==0.1.0
 bayesian-optimization==1.0.3
 bayespy==0.5.18
 beautifulsoup4==4.8.2
-bleach==1.5.0
+bleach==3.1.2
 blis==0.4.1
 blurhash==1.1.4
 boost==0.1
