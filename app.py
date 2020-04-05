@@ -105,7 +105,11 @@ def uploader():
             os.remove("input.jpg")
         os.rename(file.filename, r'input.jpg')
         flash("File uploaded successfully")
-    return redirect(url_for('home'))
+    return redirect(url_for('output'))
+
+@app.route('/upload')
+def upload():
+    return render_template("upload.html")
 
 @app.route('/cases', methods = ['POST'])
 def cases():
@@ -120,7 +124,7 @@ def cases():
         cur.execute("INSERT INTO cases(fname,lname,email,age,gender) VALUES (%s,%s,%s,%s,%s)",
                     (fname, lname, email, age, gender))
         mysql.connection.commit()
-        return redirect(url_for('output'))
+        return redirect(url_for('upload'))
 
 
 @app.route('/about')

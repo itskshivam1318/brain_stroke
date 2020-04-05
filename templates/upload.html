@@ -1,0 +1,30 @@
+<html>
+<head>
+    <title>stroke detection</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark">
+    <span class="navbar-brand mx-auto h1">STROKE PREDICTION</span>
+</nav>
+<br>
+<br>
+<div class="container border border-dark mx-auto mb-2" style="width: 1200px  ">
+<br>
+    <br>
+        <form action = "{{url_for('uploader')}}" method = "POST" enctype=multipart/form-data>
+            <input type = "file" name = "file" />
+            <input class="btn btn-primary"  type="submit">
+        </form>
+        <br>
+    </form>
+</div>
+<br>
+
+<footer class="text-light bg-dark">
+            <p>&copy; Created By <a href="https://github.com/itskshivam1318/" target="_blank">Rupal Sonawane</a></p>
+        </footer>
+</body>
+</html>
